@@ -11,8 +11,7 @@ import os
 from sklearn.metrics.pairwise import cosine_similarity
 
 st.set_page_config(page_title='Federal AI Inventory Analysis', page_icon='📊')
-openai.api_key = st.secrets["OPENAI_KEY"]
-client = OpenAI()
+client = OpenAI(api_key=st.secrets["OPENAI_KEY"])
 
 # Load the dataset
 @st.cache_data
