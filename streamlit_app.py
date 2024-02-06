@@ -8,7 +8,6 @@ from openai import OpenAI
 import openai
 from sklearn.manifold import TSNE
 import os
-from dotenv import load_dotenv
 from sklearn.metrics.pairwise import cosine_similarity
 
 st.set_page_config(page_title='AI Implementation Stages and Techniques by Agency', page_icon='📊')
