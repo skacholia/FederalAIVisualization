@@ -4,9 +4,36 @@ import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 import ast
+from openai import OpenAI
+import openai
 from sklearn.manifold import TSNE
+import os
+from dotenv import load_dotenv
+from sklearn.metrics.pairwise import cosine_similarity
+
 st.set_page_config(page_title='AI Implementation Stages and Techniques by Agency', page_icon='📊')
 
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_KEY")
+client = OpenAI()
+
+def get_embedding(text):
+    text = text.replace("\n", " ")
+    response = client.embeddings.create(
+        input=text,
+        model="text-embedding-3-small"
+    )
+    return response.data[0].embedding
+
+def search(df, text, n=3, pprint=True):
+    embedding = np.array(get_embedding(text)).reshape(1, -1)
+    df['similarity'] = df.embedding.apply(lambda x: cosine_similarity(np.array(x).reshape(1, -1), embedding))
+    res = df.sort_values('similarity', ascending=False).head(n)
+    return res
+
+def sim(text, target):
+    embedding = get_embedding(text)
+    return cosine_similarity(embedding, target)
 
 # Load the dataset
 @st.cache_data
@@ -46,6 +73,15 @@ bar_fig = px.bar(top_technique_counts, x='Technique', y='Count', title='Top 5 Te
 
 # Streamlit app code to display the charts side by side
 st.title('AI Implementation Stages and Techniques Visualization')
+
+
+search_query = st.text_input('Enter your search query:', '')
+if st.button('Search'):
+    if search_query:
+        # Perform the search
+        results = search(df, search_query, n=10, pprint=False)
+        st.write("Search Results:")
+        st.dataframe(results)  # This will display the DataFrame in the app
 
 embeddings = filtered_df['embedding'].tolist()
 if isinstance(embeddings[0], str):
