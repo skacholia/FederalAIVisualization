@@ -30,9 +30,10 @@ techniques_series = filtered_df['Techniques'].str.split(', ')
 exploded_techniques = techniques_series.explode()
 technique_counts = exploded_techniques.value_counts().reset_index()
 technique_counts.columns = ['Technique', 'Count']
+top_technique_counts = technique_counts.head(5)
 
 # Create the Plotly bar graph for techniques
-bar_fig = px.bar(technique_counts, x='Technique', y='Count', title='Frequency of Techniques')
+bar_fig = px.bar(top_technique_counts, x='Technique', y='Count', title='Top 5 Techniques')
 
 # Streamlit app code to display the charts side by side
 st.title('AI Implementation Stages and Techniques Visualization')
