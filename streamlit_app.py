@@ -10,11 +10,15 @@ from sklearn.manifold import TSNE
 import os
 from sklearn.metrics.pairwise import cosine_similarity
 
-st.set_page_config(page_title='AI Implementation Stages and Techniques by Agency', page_icon='📊')
-
-load_dotenv()
+st.set_page_config(page_title='Federal AI Inventory Analysis', page_icon='📊')
 openai.api_key = st.secrets["OPENAI_KEY"]
 client = OpenAI()
+
+# Load the dataset
+@st.cache_data
+def load_data():
+    df = pd.read_csv('federalai_embed.csv')
+    return df
 
 def get_embedding(text):
     text = text.replace("\n", " ")
@@ -34,45 +38,13 @@ def sim(text, target):
     embedding = get_embedding(text)
     return cosine_similarity(embedding, target)
 
-# Load the dataset
-@st.cache_data
-def load_data():
-    df = pd.read_csv('federalai_embed.csv')
-    return df  # Update this path
-
 df = load_data()
-
-# Sidebar for agency selection, adding an "Overall" option
 department_list = ['Overall'] + list(df['Department'].unique())
 selected_department = st.sidebar.selectbox('Select a Department:', department_list)
-
-# Adjust the dataset filtering
 if selected_department == 'Overall':
-    filtered_df = df  # Use the entire dataset for the "Overall" option
+    df = df
 else:
-    filtered_df = df[df['Department'] == selected_department]  # Filter by the selected agency
-
-# Count the occurrences of each development stage for the selected dataset
-stage_counts = filtered_df['Development_Stage'].value_counts().reset_index()
-stage_counts.columns = ['Stage', 'Count']
-
-# Create the pie chart for the selected dataset
-title_text = 'Stages of Implementation'
-pie_fig = px.pie(stage_counts, names='Stage', values='Count', title=title_text)
-
-# Count and plot the occurrences of techniques
-techniques_series = filtered_df['Techniques'].str.split(', ')
-exploded_techniques = techniques_series.explode()
-technique_counts = exploded_techniques.value_counts().reset_index()
-technique_counts.columns = ['Technique', 'Count']
-top_technique_counts = technique_counts.head(5)
-
-# Create the Plotly bar graph for techniques
-bar_fig = px.bar(top_technique_counts, x='Technique', y='Count', title='Top 5 Techniques')
-
-# Streamlit app code to display the charts side by side
-st.title('AI Implementation Stages and Techniques Visualization')
-
+    df = df[df['Department'] == selected_department]
 
 search_query = st.text_input('Enter your search query:', '')
 if st.button('Search'):
@@ -82,7 +54,7 @@ if st.button('Search'):
         st.write("Search Results:")
         st.dataframe(results)  # This will display the DataFrame in the app
 
-embeddings = filtered_df['embedding'].tolist()
+embeddings = df['embedding'].tolist()
 if isinstance(embeddings[0], str):
     embeddings = [ast.literal_eval(e) for e in embeddings]
 tsne_embeddings = TSNE(n_components=3, random_state=42).fit_transform(np.array(embeddings))
@@ -128,13 +100,23 @@ def figure(df):
     fig = go.Figure(data=[scatter], layout=layout)
     return fig
 
-st.plotly_chart(figure(filtered_df), use_container_width=True)
+st.plotly_chart(figure(df), use_container_width=True)
 
 # Use columns to layout the pie and bar charts side by side
 col1, col2 = st.columns(2)
 
 with col1:
+    stage_counts = df['Development_Stage'].value_counts().reset_index()
+    stage_counts.columns = ['Stage', 'Count']
+    title_text = 'Stages of Implementation'
+    pie_fig = px.pie(stage_counts, names='Stage', values='Count', title=title_text)
     st.plotly_chart(pie_fig, use_container_width=True)
 
 with col2:
+    techniques_series = df['Techniques'].str.split(', ')
+    exploded_techniques = techniques_series.explode()
+    technique_counts = exploded_techniques.value_counts().reset_index()
+    technique_counts.columns = ['Technique', 'Count']
+    top_technique_counts = technique_counts.head(5)
+    bar_fig = px.bar(top_technique_counts, x='Technique', y='Count', title='Top 5 Techniques')
     st.plotly_chart(bar_fig, use_container_width=True)
