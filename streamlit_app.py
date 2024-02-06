@@ -21,19 +21,26 @@ stage_counts.columns = ['Stage', 'Count']
 
 # Create the pie chart for the selected dataset
 title_text = 'Stages of Implementation - Overall' if selected_agency == 'Overall' else f'Stages of Implementation for {selected_agency}'
-fig = px.pie(stage_counts, names='Stage', values='Count', title=title_text)
+pie_fig = px.pie(stage_counts, names='Stage', values='Count', title=title_text)
 
-# Streamlit app code to display the pie chart
-st.set_page_config(page_title='AI Implementation Stages by Agency', page_icon='📊')
-st.title(title_text)
-st.plotly_chart(fig, use_container_width=True)
-
+# Count and plot the occurrences of techniques
 techniques_series = filtered_df['Techniques'].str.split(', ')
 exploded_techniques = techniques_series.explode()
 technique_counts = exploded_techniques.value_counts().reset_index()
 technique_counts.columns = ['Technique', 'Count']
 
-# Create the Plotly bar graph
-fig = px.bar(technique_counts, x='Technique', y='Count', title='Frequency of Techniques')
+# Create the Plotly bar graph for techniques
+bar_fig = px.bar(technique_counts, x='Technique', y='Count', title='Frequency of Techniques')
 
-st.plotly_chart(fig, use_container_width=True)
+# Streamlit app code to display the charts side by side
+st.set_page_config(page_title='AI Implementation Stages and Techniques by Agency', page_icon='📊')
+st.title('AI Implementation Stages and Techniques Visualization')
+
+# Use columns to layout the pie and bar charts side by side
+col1, col2 = st.columns(2)
+
+with col1:
+    st.plotly_chart(pie_fig, use_container_width=True)
+
+with col2:
+    st.plotly_chart(bar_fig, use_container_width=True)
