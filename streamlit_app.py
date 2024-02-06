@@ -1,11 +1,20 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
+import numpy as np
+import ast
+from sklearn.manifold import TSNE
 st.set_page_config(page_title='AI Implementation Stages and Techniques by Agency', page_icon='📊')
 
 
 # Load the dataset
-df = pd.read_csv('federalai.csv')  # Update this path
+@st.cache_data
+def load_data():
+    df = pd.read_csv('federalai_embed.csv')
+    return df  # Update this path
+
+df = load_data()
 
 # Sidebar for agency selection, adding an "Overall" option
 department_list = ['Overall'] + list(df['Department'].unique())
@@ -37,6 +46,50 @@ bar_fig = px.bar(top_technique_counts, x='Technique', y='Count', title='Top 5 Te
 
 # Streamlit app code to display the charts side by side
 st.title('AI Implementation Stages and Techniques Visualization')
+
+embeddings = df['embedding'].tolist()
+if isinstance(embeddings[0], str):
+    embeddings = [ast.literal_eval(e) for e in embeddings]
+tsne_embeddings = TSNE(n_components=3, random_state=42).fit_transform(np.array(embeddings))
+x = tsne_embeddings[:, 0]
+y = tsne_embeddings[:, 1]
+z = tsne_embeddings[:, 2]
+
+scatter = go.Scatter3d(
+    x = x,
+    y = y,
+    z = z,
+    mode = 'markers',
+    marker = dict(
+        size = 5,  # Increase the marker size for better visibility
+        color = df['cluster'],  # Color by cluster
+        colorscale = 'Viridis',
+        opacity = 0.8,
+    ),
+    hovertemplate = 
+        '%{text}<br><br>' +  # Bold name on hover
+        '<b>Cluster: %{customdata}<br>' +  # Include cluster information
+        'Coordinates: (%{x}, %{y}, %{z})<extra></extra>',  # Include coordinates
+    text = ['<br>'.join(text[i:i+30] for i in range(0, len(text), 20)) for text in df['Summary']],
+    customdata = df['cluster']
+)
+
+layout = go.Layout(
+    title = '3D t-SNE Clustering',
+    scene = dict(
+        xaxis = dict(title='Dimension 1', zeroline=False),
+        yaxis = dict(title='Dimension 2', zeroline=False),
+        zaxis = dict(title='Dimension 3', zeroline=False),
+    ),
+    hoverlabel = dict(
+        bgcolor = "white",  # Background color for hover label
+        font_size = 12,  # Text font size
+        font_family = "Arial"  # Text font family
+    )
+)
+
+fig = go.Figure(data=[scatter], layout=layout)
+fig.show()
 
 # Use columns to layout the pie and bar charts side by side
 col1, col2 = st.columns(2)
