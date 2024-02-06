@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+st.set_page_config(page_title='AI Implementation Stages and Techniques by Agency', page_icon='📊')
+
 
 # Load the dataset
 df = pd.read_csv('federalai.csv')  # Update this path
@@ -33,7 +35,6 @@ technique_counts.columns = ['Technique', 'Count']
 bar_fig = px.bar(technique_counts, x='Technique', y='Count', title='Frequency of Techniques')
 
 # Streamlit app code to display the charts side by side
-st.set_page_config(page_title='AI Implementation Stages and Techniques by Agency', page_icon='📊')
 st.title('AI Implementation Stages and Techniques Visualization')
 
 # Use columns to layout the pie and bar charts side by side
