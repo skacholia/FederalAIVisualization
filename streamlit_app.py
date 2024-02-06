@@ -29,13 +29,9 @@ def get_embedding(text):
 
 def search(df, text, n=3, pprint=True):
     embedding = np.array(get_embedding(text)).reshape(1, -1)
-    df['similarity'] = df.embedding.apply(lambda x: cosine_similarity(np.array(x).reshape(1, -1), embedding))
+    df['similarity'] = df.embedding.apply(lambda x: cosine_similarity(np.array(x).reshape(1, -1), ast.literal_eval(embedding)))
     res = df.sort_values('similarity', ascending=False).head(n)
     return res
-
-def sim(text, target):
-    embedding = get_embedding(text)
-    return cosine_similarity(embedding, target)
 
 df = load_data()
 department_list = ['Overall'] + list(df['Department'].unique())
