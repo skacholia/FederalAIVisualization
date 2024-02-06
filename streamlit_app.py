@@ -89,7 +89,7 @@ layout = go.Layout(
 )
 
 fig = go.Figure(data=[scatter], layout=layout)
-fig.show()
+st.plotly_chart(fig, use_container_width=True)
 
 # Use columns to layout the pie and bar charts side by side
 col1, col2 = st.columns(2)
