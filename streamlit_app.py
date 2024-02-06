@@ -55,41 +55,45 @@ x = tsne_embeddings[:, 0]
 y = tsne_embeddings[:, 1]
 z = tsne_embeddings[:, 2]
 
-scatter = go.Scatter3d(
-    x = x,
-    y = y,
-    z = z,
-    mode = 'markers',
-    marker = dict(
-        size = 5,  # Increase the marker size for better visibility
-        color = df['cluster'],  # Color by cluster
-        colorscale = 'Viridis',
-        opacity = 0.8,
-    ),
-    hovertemplate = 
-        '%{text}<br><br>' +  # Bold name on hover
-        '<b>Cluster: %{customdata}<br>' +  # Include cluster information
-        'Coordinates: (%{x}, %{y}, %{z})<extra></extra>',  # Include coordinates
-    text = ['<br>'.join(text[i:i+30] for i in range(0, len(text), 20)) for text in filtered_df['Summary']],
-    customdata = filtered_df['cluster']
-)
-
-layout = go.Layout(
-    title = '3D t-SNE Clustering',
-    scene = dict(
-        xaxis = dict(title='Dimension 1', zeroline=False),
-        yaxis = dict(title='Dimension 2', zeroline=False),
-        zaxis = dict(title='Dimension 3', zeroline=False),
-    ),
-    hoverlabel = dict(
-        bgcolor = "white",  # Background color for hover label
-        font_size = 12,  # Text font size
-        font_family = "Arial"  # Text font family
+@st.cache_data
+def figure(df):
+    scatter = go.Scatter3d(
+        x = x,
+        y = y,
+        z = z,
+        mode = 'markers',
+        marker = dict(
+            size = 5,  # Increase the marker size for better visibility
+            color = df['cluster'],  # Color by cluster
+            colorscale = 'Viridis',
+            opacity = 0.8,
+        ),
+        hovertemplate = 
+            '%{text}<br><br>' +  # Bold name on hover
+            '<b>Cluster: %{customdata}<br>' +  # Include cluster information
+            'Coordinates: (%{x}, %{y}, %{z})<extra></extra>',  # Include coordinates
+        text = ['<br>'.join(text[i:i+30] for i in range(0, len(text), 20)) for text in df['Title']],
+        customdata = df['cluster']
     )
-)
 
-fig = go.Figure(data=[scatter], layout=layout)
-st.plotly_chart(fig, use_container_width=True)
+    layout = go.Layout(
+        title = '3D t-SNE Clustering',
+        scene = dict(
+            xaxis = dict(title='Dimension 1', zeroline=False),
+            yaxis = dict(title='Dimension 2', zeroline=False),
+            zaxis = dict(title='Dimension 3', zeroline=False),
+        ),
+        hoverlabel = dict(
+            bgcolor = "black",  # Background color for hover label
+            font_size = 12,  # Text font size
+            font_family = "Arial"  # Text font family
+        )
+    )
+
+    fig = go.Figure(data=[scatter], layout=layout)
+    return fig
+
+st.plotly_chart(figure(filtered_df), use_container_width=True)
 
 # Use columns to layout the pie and bar charts side by side
 col1, col2 = st.columns(2)
