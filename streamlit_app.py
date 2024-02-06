@@ -14,7 +14,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 st.set_page_config(page_title='AI Implementation Stages and Techniques by Agency', page_icon='📊')
 
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_KEY")
+openai.api_key = st.secrets["OPENAI_KEY"]
 client = OpenAI()
 
 def get_embedding(text):
