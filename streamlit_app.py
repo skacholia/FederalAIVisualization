@@ -17,6 +17,7 @@ client = OpenAI(api_key=st.secrets["OPENAI_KEY"])
 @st.cache_data
 def load_data():
     df = pd.read_csv('federalai_embed.csv')
+    df['embedding'].apply(eval).apply(np.array)
     return df
 
 def get_embedding(text):
@@ -29,7 +30,7 @@ def get_embedding(text):
 
 def search(df, text, n=3, pprint=True):
     embedding = np.array(get_embedding(text)).reshape(1, -1)
-    df['similarity'] = df.embedding.apply(lambda x: cosine_similarity(np.array(x).reshape(1, -1), ast.literal_eval(embedding)))
+    df['similarity'] = df.embedding.apply(lambda x: cosine_similarity(np.array(x).reshape(1, -1), embedding))
     res = df.sort_values('similarity', ascending=False).head(n)
     return res
 
