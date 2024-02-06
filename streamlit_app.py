@@ -27,3 +27,13 @@ fig = px.pie(stage_counts, names='Stage', values='Count', title=title_text)
 st.set_page_config(page_title='AI Implementation Stages by Agency', page_icon='📊')
 st.title(title_text)
 st.plotly_chart(fig, use_container_width=True)
+
+techniques_series = filtered_df['Techniques'].str.split(', ')
+exploded_techniques = techniques_series.explode()
+technique_counts = exploded_techniques.value_counts().reset_index()
+technique_counts.columns = ['Technique', 'Count']
+
+# Create the Plotly bar graph
+fig = px.bar(technique_counts, x='Technique', y='Count', title='Frequency of Techniques')
+
+st.plotly_chart(fig, use_container_width=True)
