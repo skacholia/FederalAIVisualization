@@ -22,7 +22,7 @@ stage_counts = filtered_df['Development_Stage'].value_counts().reset_index()
 stage_counts.columns = ['Stage', 'Count']
 
 # Create the pie chart for the selected dataset
-title_text = 'Stages of Implementation - Overall' if selected_department == 'Overall' else f'Stages of Implementation for {selected_agency}'
+title_text = 'Stages of Implementation - Overall' if selected_department == 'Overall' else f'Stages of Implementation for {selected_department}'
 pie_fig = px.pie(stage_counts, names='Stage', values='Count', title=title_text)
 
 # Count and plot the occurrences of techniques
