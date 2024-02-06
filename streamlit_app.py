@@ -46,7 +46,7 @@ search_query = st.text_input('Enter your search query:', '')
 if st.button('Search'):
     if search_query:
         # Perform the search
-        results = search(df, search_query, n=10, pprint=False)
+        results = search(df, search_query, n=10, pprint=False).drop(columns=['embedding'])
         st.write("Search Results:")
         st.dataframe(results)  # This will display the DataFrame in the app
 
