@@ -17,7 +17,7 @@ client = OpenAI(api_key=st.secrets["OPENAI_KEY"])
 @st.cache_data
 def load_data():
     df = pd.read_csv('federalai_embed.csv')
-    df['embedding'].apply(eval).apply(np.array)
+    df['embedding'] = df['embedding'].apply(eval).apply(np.array)
     return df
 
 def get_embedding(text):
