@@ -47,7 +47,7 @@ bar_fig = px.bar(top_technique_counts, x='Technique', y='Count', title='Top 5 Te
 # Streamlit app code to display the charts side by side
 st.title('AI Implementation Stages and Techniques Visualization')
 
-embeddings = df['embedding'].tolist()
+embeddings = filtered_df['embedding'].tolist()
 if isinstance(embeddings[0], str):
     embeddings = [ast.literal_eval(e) for e in embeddings]
 tsne_embeddings = TSNE(n_components=3, random_state=42).fit_transform(np.array(embeddings))
@@ -70,8 +70,8 @@ scatter = go.Scatter3d(
         '%{text}<br><br>' +  # Bold name on hover
         '<b>Cluster: %{customdata}<br>' +  # Include cluster information
         'Coordinates: (%{x}, %{y}, %{z})<extra></extra>',  # Include coordinates
-    text = ['<br>'.join(text[i:i+30] for i in range(0, len(text), 20)) for text in df['Summary']],
-    customdata = df['cluster']
+    text = ['<br>'.join(text[i:i+30] for i in range(0, len(text), 20)) for text in filtered_df['Summary']],
+    customdata = filtered_df['cluster']
 )
 
 layout = go.Layout(
