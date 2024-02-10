@@ -88,15 +88,15 @@ if st.button('Search'):
         st.write_stream(gpt("Provide a one-paragraph summary of these AI projects. Mention specifics.", summary_string))
 
 st.header("3D Visualization")
-st.markdown("""This is an interactive visualization of the embeddings of project descriptions. You can see which projects are close to each other, based on the meaning of their description. I've also clustered the project description, finding 5 natural thematic clusters:\n
+st.markdown("""This is an interactive visualization of the embeddings of project descriptions. You can see which projects are close to each other, based on the meaning of their description. I've also clustered the project description, finding 5 natural thematic clusters:
             
-            **1. Image Detection:** These projects focus on the analysis of sensors and imagery data. Common keywords include **satellite imagery**, **sensor data**, **lidar imagery**, and **computer vision**. For example the DHS leverages SAR satellites and AI for detection capabilities, and the NOAA uses AI for processing passive acoustic data of whales.\n
+            **1. Image Detection:** These projects focus on the analysis of sensors and imagery data. Common keywords include **satellite imagery**, **sensor data**, **lidar imagery**, and **computer vision**. For example the DHS leverages SAR satellites and AI for detection capabilities, and the NOAA uses AI for processing passive acoustic data of whales.
             
-            **2. Document Processing:** These projects use natural language processing (NLP) and other text analysis techniques for tasks like claims processing, creating chatbots, and processing grants. Common keywords include **text analytics** and **virtual agent**. For example, the FDA uses AI to process docket comments.\n
+            **2. Document Processing:** These projects use natural language processing (NLP) and other text analysis techniques for tasks like claims processing, creating chatbots, and processing grants. Common keywords include **text analytics** and **virtual agent**. For example, the FDA uses AI to process docket comments.
             
-            **3. Trend Forecasting:**: These projects use AI for predictive analytics and forecasting. Common keywords include **predictive scenarios** and **seasonal forecasts**. For example, the DOI uses AI to forecast water supply.\n
+            **3. Trend Forecasting:**: These projects use AI for predictive analytics and forecasting. Common keywords include **predictive scenarios** and **seasonal forecasts**. For example, the DOI uses AI to forecast water supply.
             
-            **4. Energy and Physics:** These projects focus on using AI for projects in energy and physics. Common keywords include **energy storage**, **boiler operations**, and **combustion**. For example, the National Energy Technology Laboratory is building an artificial intelligence field laboratory for unconventional energy resources.\n
+            **4. Energy and Physics:** These projects focus on using AI for projects in energy and physics. Common keywords include **energy storage**, **boiler operations**, and **combustion**. For example, the National Energy Technology Laboratory is building an artificial intelligence field laboratory for unconventional energy resources.
             
             **5. Health:** These projects focus on drug discovery, clinical applications, and other medical uses of AI. Common keywords include **claims data**, **drug labeling**, and **opioid use**. For example, the CDC is using AI to detect illicit opioid use based on clinical notes.""")
 embeddings = df['embedding'].tolist()
