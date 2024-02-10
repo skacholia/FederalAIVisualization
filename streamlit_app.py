@@ -73,7 +73,7 @@ if selected_department == 'Overall':
 else:
     df = df[df['Department'] == selected_department]
 
-st.sidebar.text("This is project by [Suhan Kacholia](https://skacholia.vercel.app/)")
+st.sidebar.markdown("This is project by [Suhan Kacholia](https://skacholia.vercel.app/)")
 st.header("Search")
 search_query = st.text_input('Enter your search query:', '')
 if st.button('Search'):
