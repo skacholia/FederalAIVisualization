@@ -66,7 +66,7 @@ if selected_department == 'Overall':
 else:
     df = df[df['Department'] == selected_department]
 
-st.header("1. Search")
+st.header("Search")
 search_query = st.text_input('Enter your search query:', '')
 if st.button('Search'):
     if search_query:
@@ -75,10 +75,10 @@ if st.button('Search'):
         st.write("Search Results:")
         st.dataframe(results)  # This will display the DataFrame in the app
         summary_string = results['Summary'].str.cat(sep=' ')
-        st.markdown("###GPT Summary:")
-        st.write(gpt("Provide a one-paragraph summary of these AI projects. What are some features they have in common? Mention specifics.", summary_string))
+        st.markdown("### GPT Summary:")
+        st.write(gpt("Provide a one-paragraph summary of these AI projects. Mention specifics.", summary_string))
 
-st.header("2. 3D Visualization")
+st.header("3D Visualization")
 embeddings = df['embedding'].tolist()
 if isinstance(embeddings[0], str):
     embeddings = [ast.literal_eval(e) for e in embeddings]
@@ -127,7 +127,7 @@ def figure(df):
 
 st.plotly_chart(figure(df), use_container_width=True)
 
-st.header("3. Other Graphs")
+st.header("More Visualization")
 col1, col2 = st.columns(2)
 
 stage_counts = df['Development_Stage'].value_counts().reset_index()
