@@ -34,14 +34,16 @@ def search(df, text, n=3, pprint=True):
     return res
 
 def gpt(prompt, text, engine="gpt-3.5-turbo-1106", temperature=0.2):
-    completion = client.chat.completions.create(
-      model=engine,
-      messages=[
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": text}
-      ]
+    stream = client.chat.completions.create(
+            model=engine,
+            messages=[
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": text}
+            ],
+            stream=True,
+            temperature=temperature
     )
-    return completion.choices[0].message.content
+    return stream
 
 st.title('Federal AI Inventory Analysis')
 st.header("Context")
@@ -77,7 +79,7 @@ if st.button('Search'):
         st.dataframe(results)  # This will display the DataFrame in the app
         summary_string = results['Summary'].str.cat(sep=' ')
         st.markdown("### GPT Summary:")
-        st.write(gpt("Provide a one-paragraph summary of these AI projects. Mention specifics.", summary_string))
+        st.write_stream(gpt("Provide a one-paragraph summary of these AI projects. Mention specifics.", summary_string))
 
 st.header("3D Visualization")
 st.markdown("""This is an interactive visualization of the embeddings of project descriptions. You can see which projects are close to each other, based on the meaning of their description. I've also clustered the project description, finding 8 natural groupings:
