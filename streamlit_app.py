@@ -55,7 +55,7 @@ For example, 'school' and 'education' will have similar embeddings,
 despite having few letters in common. \nI also use gpt-3.5-turbo to generate short summaries of the found use cases. 
 **This could help AI practitioners take inspiration from past AI projects.**\n
 2. Visualization: I've included an interactive, 3D visualization of the embeddings of the project descriptions. 
-This helps visually identify which projects are similar to which."""
+This helps visually identify which projects are similar to which. I've also included graphical breakdowns of stages of projects and AI techniques used."""
 
 df = load_data()
 department_list = ['Overall'] + list(df['Department'].unique())
@@ -66,6 +66,7 @@ if selected_department == 'Overall':
 else:
     df = df[df['Department'] == selected_department]
 
+st.header("1. Search")
 search_query = st.text_input('Enter your search query:', '')
 if st.button('Search'):
     if search_query:
@@ -74,8 +75,9 @@ if st.button('Search'):
         st.write("Search Results:")
         st.dataframe(results)  # This will display the DataFrame in the app
         summary_string = results['Summary'].str.cat(sep=' ')
-        st.write(gpt("Summarize these AI projects.", summary_string))
+        st.write(gpt("Provide a one-paragraph summary of these AI projects. What are some features they have in common? Mention specifics.", summary_string))
 
+st.header("2. 3D Visualization")
 embeddings = df['embedding'].tolist()
 if isinstance(embeddings[0], str):
     embeddings = [ast.literal_eval(e) for e in embeddings]
@@ -124,15 +126,26 @@ def figure(df):
 
 st.plotly_chart(figure(df), use_container_width=True)
 
-# Use columns to layout the pie and bar charts side by side
+st.header("3. Other Graphs")
 col1, col2 = st.columns(2)
 
+stage_counts = df['Development_Stage'].value_counts().reset_index()
+stage_counts.columns = ['Stage', 'Count']
+title_text = 'Stages of Implementation'
+pie_fig = px.pie(stage_counts, names='Stage', values='Count', title=title_text)
+st.plotly_chart(pie_fig, use_container_width=True)
+
 with col1:
-    stage_counts = df['Development_Stage'].value_counts().reset_index()
-    stage_counts.columns = ['Stage', 'Count']
-    title_text = 'Stages of Implementation'
-    pie_fig = px.pie(stage_counts, names='Stage', values='Count', title=title_text)
-    st.plotly_chart(pie_fig, use_container_width=True)
+    if selected_department == 'Overall':
+        agency_counts = df['Department'].value_counts().reset_index()
+        agency_counts.columns = ['Department', 'Count']
+    else:
+        agency_counts = df['Agency'].value_counts().reset_index()
+        agency_counts.columns = ['Agency', 'Count']
+    title_text = 'Projects by Agency'
+    top_agency_counts = agency_counts.head(5)
+    bar_fig = px.bar(top_agency_counts, x='Technique', y='Count', title='Top 5 Techniques')
+    st.plotly_chart(bar_fig, use_container_width=True)
 
 with col2:
     techniques_series = df['Techniques'].str.split(', ')
