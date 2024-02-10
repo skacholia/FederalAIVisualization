@@ -47,14 +47,14 @@ def gpt(prompt, text, engine="gpt-3.5-turbo-1106", temperature=0.2):
 
 st.title('Federal AI Inventory Analysis')
 st.header("Context")
-content = """Executive Order 13960, “Promoting the Use of Trustworthy Artificial Intelligence in the Federal Government,” 
+content = """[Executive Order 13960](https://www.cio.gov/policies-and-priorities/Executive-Order-13960-AI-Use-Case-Inventories-Reference/), “Promoting the Use of Trustworthy Artificial Intelligence in the Federal Government,” 
 requires US federal agencies to prepare an inventory of non-classified and non-sensitive current and  planned Artificial Intelligence (AI) use cases. 
 This tool helps navigate, understand, and visualize those use cases.\n\n
-I owe gratitude to Travis Hoppe, for cleaning use case inventory data. I incorporate two main features in this app:
-**1. Search**: I used OpenAI's text-embedding-3-small model to embed the descriptions of use cases. You can enter a query, 
+I owe gratitude to [Travis Hoppe](https://github.com/thoppe/Federal-AI-inventory-analysis-2023), for cleaning use case inventory data. I incorporate two main features in this app:
+\n\n**1. Search**: I used OpenAI's `text-embedding-3-small` model to embed the descriptions of use cases. You can enter a query, 
 and the tool will find the most similar use cases to that query. **This is based on meaning, not specific wording or letters.** 
 For example, 'school' and 'education' will have similar embeddings, 
-despite having few letters in common. \nI also use gpt-3.5-turbo to generate short summaries of the found use cases. 
+despite having few letters in common. \nI also use `gpt-3.5-turbo` to generate short summaries of the found use cases. 
 **This could help AI practitioners take inspiration from past AI projects.**\n
 **2. Visualization**: I've included an interactive, 3D visualization of the embeddings of the project descriptions. 
 This helps visually identify which projects are similar to which. I've also included graphical breakdowns of stages of projects and AI techniques used."""
@@ -68,7 +68,7 @@ if selected_department == 'Overall':
 else:
     df = df[df['Department'] == selected_department]
 
-st.sidebar.text("This is project by Suhan Kacholia")
+st.sidebar.text("This is project by [Suhan Kacholia](https://skacholia.vercel.app/)")
 st.header("Search")
 search_query = st.text_input('Enter your search query:', '')
 if st.button('Search'):
@@ -139,7 +139,7 @@ def figure(df):
 
 st.plotly_chart(figure(df), use_container_width=True)
 
-st.header("More Visualization")
+st.header("More Visualizations")
 col1, col2 = st.columns(2)
 
 stage_counts = df['Development_Stage'].value_counts().reset_index()
@@ -154,14 +154,14 @@ with col1:
         agency_counts.columns = ['Department', 'Count']
         title_text = 'Projects by Department'
         top_agency_counts = agency_counts.head(5)
-        bar_fig = px.bar(top_agency_counts, x='Department', y='Count', title='Top 5 Techniques')
+        bar_fig = px.bar(top_agency_counts, x='Department', y='Count', title='Top 5 Departments')
         st.plotly_chart(bar_fig, use_container_width=True)
     else:
         agency_counts = df['Agency'].value_counts().reset_index()
         agency_counts.columns = ['Agency', 'Count']
         title_text = 'Projects by Agency'
         top_agency_counts = agency_counts.head(5)
-        bar_fig = px.bar(top_agency_counts, x='Agency', y='Count', title='Top 5 Techniques')
+        bar_fig = px.bar(top_agency_counts, x='Agency', y='Count', title='Top 5 Agencies')
         st.plotly_chart(bar_fig, use_container_width=True)
 
 with col2:
