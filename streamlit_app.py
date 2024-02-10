@@ -75,6 +75,7 @@ if st.button('Search'):
         st.write("Search Results:")
         st.dataframe(results)  # This will display the DataFrame in the app
         summary_string = results['Summary'].str.cat(sep=' ')
+        st.markdown("###GPT Summary:")
         st.write(gpt("Provide a one-paragraph summary of these AI projects. What are some features they have in common? Mention specifics.", summary_string))
 
 st.header("2. 3D Visualization")
