@@ -48,7 +48,7 @@ def gpt(prompt, text, engine="gpt-3.5-turbo-1106", temperature=0.2):
 st.title('Federal AI Inventory Analysis')
 content = """[Executive Order 13960](https://www.cio.gov/policies-and-priorities/Executive-Order-13960-AI-Use-Case-Inventories-Reference/), “Promoting the Use of Trustworthy Artificial Intelligence in the Federal Government,” 
 requires US federal agencies to prepare an inventory of non-classified and non-sensitive current and  planned Artificial Intelligence (AI) use cases. 
-This tool helps navigate, understand, and visualize those use cases.\n\n
+This tool helps navigate, understand, and visualize those use cases. Using the sidebar, you can break down the data by department.\n\n
 I owe gratitude to [Travis Hoppe](https://github.com/thoppe/Federal-AI-inventory-analysis-2023), for cleaning use case inventory data. I incorporate two main features in this app:
 \n\n**1. Search**: I used OpenAI's `text-embedding-3-small` model to embed the descriptions of use cases. You can enter a query, 
 and the tool will find the most similar use cases to that query. **This is based on meaning, not specific wording or letters.** 
