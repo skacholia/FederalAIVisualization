@@ -44,9 +44,11 @@ else:
 
 content = """Executive Order 13960, “Promoting the Use of Trustworthy Artificial Intelligence in the Federal Government,” 
 requires US federal agencies to prepare an inventory of non-classified and non-sensitive current and  planned Artificial Intelligence (AI) use cases. This tool is intended to help navigate, understand, and visualize those use cases.\n\n
-I used data cleaned by Travis Hoppe to create this website. It has two primary features:
-1. Search: I used OpenAI's text-embedding-3-small model to embed the descriptions of use cases. . 
-2. Visualization: """
+I used data cleaned by Travis Hoppe to create this website. It has two main features:
+1. Search: I used OpenAI's text-embedding-3-small model to embed the descriptions of use cases. You can enter a query, 
+and the website will find the most similar use cases to that query. This is based on meaning, not specific words or letters. For example, 'school' and 'education' will have similar embeddings, 
+despite having few letters in common. I also use gpt-3.5-turbo to generate short summaries of the found use cases. This may help AI practitioners take inspiration from past AI projects. 
+2. Visualization: I incldue an interactive, 3D visualization of the embeddings of the project descriptions. This helps you visually see which projects are similar to which. """
 st.markdown(content)
 search_query = st.text_input('Enter your search query:', '')
 if st.button('Search'):
