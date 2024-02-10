@@ -46,7 +46,6 @@ def gpt(prompt, text, engine="gpt-3.5-turbo-1106", temperature=0.2):
     return stream
 
 st.title('Federal AI Inventory Analysis')
-st.header("Context")
 content = """[Executive Order 13960](https://www.cio.gov/policies-and-priorities/Executive-Order-13960-AI-Use-Case-Inventories-Reference/), “Promoting the Use of Trustworthy Artificial Intelligence in the Federal Government,” 
 requires US federal agencies to prepare an inventory of non-classified and non-sensitive current and  planned Artificial Intelligence (AI) use cases. 
 This tool helps navigate, understand, and visualize those use cases.\n\n
@@ -64,6 +63,7 @@ department_list = ['Overall'] + list(df['Department'].unique())
 selected_department = st.sidebar.selectbox('Select a Department:', department_list)
 if selected_department == 'Overall':
     df = df
+    st.header("Context")
     st.markdown(content)
 else:
     df = df[df['Department'] == selected_department]
