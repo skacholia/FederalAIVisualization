@@ -50,11 +50,15 @@ content = """[Executive Order 13960](https://www.cio.gov/policies-and-priorities
 requires US federal agencies to prepare an inventory of non-classified and non-sensitive current and  planned Artificial Intelligence (AI) use cases. 
 This tool helps navigate, understand, and visualize those use cases. Using the sidebar, you can break down the data by department.\n\n
 I owe gratitude to [Travis Hoppe](https://github.com/thoppe/Federal-AI-inventory-analysis-2023), for cleaning use case inventory data. I incorporate two main features in this app:
-\n\n**1. Search**: I used OpenAI's `text-embedding-3-small` model to embed the descriptions of use cases. You can enter a query, 
+\n\n
+
+**1. Search**: I used OpenAI's `text-embedding-3-small` model to embed the descriptions of use cases. You can enter a query, 
 and the tool will find the most similar use cases to that query. **This is based on meaning, not specific wording or letters.** 
 For example, 'school' and 'education' will have similar embeddings, 
 despite having few letters in common. \nI also use `gpt-3.5-turbo` to generate short summaries of the found use cases. 
 **This could help AI practitioners take inspiration from past AI projects.**\n
+
+
 **2. Visualization**: I've included an interactive, 3D visualization of the embeddings of the project descriptions. 
 This helps visually identify which projects are similar to which. I've also included graphical breakdowns of stages of projects and AI techniques used."""
 
