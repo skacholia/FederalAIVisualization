@@ -49,12 +49,12 @@ content = """Executive Order 13960, “Promoting the Use of Trustworthy Artifici
 requires US federal agencies to prepare an inventory of non-classified and non-sensitive current and  planned Artificial Intelligence (AI) use cases. 
 This tool helps navigate, understand, and visualize those use cases.\n\n
 I owe gratitude to Travis Hoppe, for cleaning use case inventory data. I incorporate two main features in this app:
-1. Search: I used OpenAI's text-embedding-3-small model to embed the descriptions of use cases. You can enter a query, 
+**1. Search**: I used OpenAI's text-embedding-3-small model to embed the descriptions of use cases. You can enter a query, 
 and the tool will find the most similar use cases to that query. **This is based on meaning, not specific wording or letters.** 
 For example, 'school' and 'education' will have similar embeddings, 
 despite having few letters in common. \nI also use gpt-3.5-turbo to generate short summaries of the found use cases. 
 **This could help AI practitioners take inspiration from past AI projects.**\n
-2. Visualization: I've included an interactive, 3D visualization of the embeddings of the project descriptions. 
+**2. Visualization**: I've included an interactive, 3D visualization of the embeddings of the project descriptions. 
 This helps visually identify which projects are similar to which. I've also included graphical breakdowns of stages of projects and AI techniques used."""
 
 df = load_data()
@@ -66,6 +66,7 @@ if selected_department == 'Overall':
 else:
     df = df[df['Department'] == selected_department]
 
+st.sidebar.text("This is project by Suhan Kacholia")
 st.header("Search")
 search_query = st.text_input('Enter your search query:', '')
 if st.button('Search'):
@@ -79,6 +80,15 @@ if st.button('Search'):
         st.write(gpt("Provide a one-paragraph summary of these AI projects. Mention specifics.", summary_string))
 
 st.header("3D Visualization")
+st.markdown("""This is an interactive visualization of the embeddings of project descriptions. You can see which projects are close to each other, based on the meaning of their description. I've also clustered the project description, finding 8 natural groupings:
+            **1. **
+            **2. **
+            **3. **
+            **4. **
+            **5. **
+            **6. **
+            **7. **
+            **8. **""")
 embeddings = df['embedding'].tolist()
 if isinstance(embeddings[0], str):
     embeddings = [ast.literal_eval(e) for e in embeddings]
@@ -140,13 +150,17 @@ with col1:
     if selected_department == 'Overall':
         agency_counts = df['Department'].value_counts().reset_index()
         agency_counts.columns = ['Department', 'Count']
+        title_text = 'Projects by Department'
+        top_agency_counts = agency_counts.head(5)
+        bar_fig = px.bar(top_agency_counts, x='Department', y='Count', title='Top 5 Techniques')
+        st.plotly_chart(bar_fig, use_container_width=True)
     else:
         agency_counts = df['Agency'].value_counts().reset_index()
         agency_counts.columns = ['Agency', 'Count']
-    title_text = 'Projects by Agency'
-    top_agency_counts = agency_counts.head(5)
-    bar_fig = px.bar(top_agency_counts, x='Agency', y='Count', title='Top 5 Techniques')
-    st.plotly_chart(bar_fig, use_container_width=True)
+        title_text = 'Projects by Agency'
+        top_agency_counts = agency_counts.head(5)
+        bar_fig = px.bar(top_agency_counts, x='Agency', y='Count', title='Top 5 Techniques')
+        st.plotly_chart(bar_fig, use_container_width=True)
 
 with col2:
     techniques_series = df['Techniques'].str.split(', ')
