@@ -145,7 +145,7 @@ with col1:
         agency_counts.columns = ['Agency', 'Count']
     title_text = 'Projects by Agency'
     top_agency_counts = agency_counts.head(5)
-    bar_fig = px.bar(top_agency_counts, x='Technique', y='Count', title='Top 5 Techniques')
+    bar_fig = px.bar(top_agency_counts, x='Agency', y='Count', title='Top 5 Techniques')
     st.plotly_chart(bar_fig, use_container_width=True)
 
 with col2:
