@@ -13,7 +13,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 st.set_page_config(page_title='Federal AI Inventory Analysis', page_icon='📊')
 client = OpenAI(api_key=st.secrets["OPENAI_KEY"])
 
-# Load the dataset
 @st.cache_data
 def load_data():
     df = pd.read_csv('federalai_embed.csv')
@@ -44,8 +43,9 @@ def gpt(prompt, text, engine="gpt-3.5-turbo-1106", temperature=0.2):
     )
     return completion.choices[0].message.content
 
-content = """# Context\n
-Executive Order 13960, “Promoting the Use of Trustworthy Artificial Intelligence in the Federal Government,” 
+st.title('Federal AI Inventory Analysis')
+st.header("Context")
+content = """Executive Order 13960, “Promoting the Use of Trustworthy Artificial Intelligence in the Federal Government,” 
 requires US federal agencies to prepare an inventory of non-classified and non-sensitive current and  planned Artificial Intelligence (AI) use cases. 
 This tool helps navigate, understand, and visualize those use cases.\n\n
 I owe gratitude to Travis Hoppe, for cleaning use case inventory data. I incorporate two main features in this app:
