@@ -72,6 +72,14 @@ if selected_department == 'Overall':
     st.markdown(content)
 else:
     df = df[df['Department'] == selected_department]
+    st.header("Overview")
+    titles = df['Title'].sample(n=3).astype(str)
+    last_title = titles[-1]
+    if len(titles) > 1:
+        titles_str = ', '.join(titles[:-1]) + ', and ' + last_title
+    else:
+        titles_str = last_title
+        st.markdown(f"The {selected_department} reported {len(df)} AI projects in 2023. A random sample of project titles include {titles_str}")
 
 st.sidebar.markdown("This is project by [Suhan Kacholia](https://skacholia.vercel.app/)")
 st.header("Search")
