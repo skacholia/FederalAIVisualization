@@ -34,36 +34,47 @@ def search(df, text, n=3, pprint=True):
     res = df.sort_values('similarity', ascending=False).head(n)
     return res
 
+def gpt(prompt, text, engine="gpt-3.5-turbo-1106", temperature=0.2):
+    completion = client.chat.completions.create(
+      model=engine,
+      messages=[
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": text}
+      ]
+    )
+    return completion.choices[0].message.content
+
+content = """# Context\n
+Executive Order 13960, “Promoting the Use of Trustworthy Artificial Intelligence in the Federal Government,” 
+requires US federal agencies to prepare an inventory of non-classified and non-sensitive current and  planned Artificial Intelligence (AI) use cases. 
+This tool helps navigate, understand, and visualize those use cases.\n\n
+I owe gratitude to Travis Hoppe, for cleaning use case inventory data. I incorporate two main features in this app:
+1. Search: I used OpenAI's text-embedding-3-small model to embed the descriptions of use cases. You can enter a query, 
+and the tool will find the most similar use cases to that query. **This is based on meaning, not specific wording or letters.** 
+For example, 'school' and 'education' will have similar embeddings, 
+despite having few letters in common. \nI also use gpt-3.5-turbo to generate short summaries of the found use cases. 
+**This could help AI practitioners take inspiration from past AI projects.**\n
+2. Visualization: I've included an interactive, 3D visualization of the embeddings of the project descriptions. 
+This helps visually identify which projects are similar to which."""
+
 df = load_data()
 department_list = ['Overall'] + list(df['Department'].unique())
 selected_department = st.sidebar.selectbox('Select a Department:', department_list)
 if selected_department == 'Overall':
     df = df
+    st.markdown(content)
 else:
     df = df[df['Department'] == selected_department]
 
-content = """#Context
-Executive Order 13960, “Promoting the Use of Trustworthy Artificial Intelligence in the Federal Government,” 
-requires US federal agencies to prepare an inventory of non-classified and non-sensitive current and  planned Artificial Intelligence (AI) use cases. 
-This tool intends to help navigate, understand, and visualize those use cases.\n\n
-I owe gratitude to Travis Hoppe, for cleaning the use case data and providing inspiration for this website. It has two main features:
-
-1. Search: I used OpenAI's text-embedding-3-small model to embed the descriptions of use cases. You can enter a query, 
-and the tool will find the most similar use cases to that query. This is based on meaning, not specific words or letters. 
-For example, 'school' and 'education' will have similar embeddings, 
-despite having few letters in common. I also use gpt-3.5-turbo to generate short summaries of the found use cases. 
-This could help AI practitioners take inspiration from past AI projects. 
-
-2. Visualization: I've included an interactive, 3D visualization of the embeddings of the project descriptions. 
-This helps visually identify which projects are similar to which."""
-st.markdown(content)
 search_query = st.text_input('Enter your search query:', '')
 if st.button('Search'):
     if search_query:
         # Perform the search
-        results = search(df, search_query, n=10, pprint=False).drop(columns=['embedding', 'similarity'])
+        results = search(df, search_query, n=10, pprint=False).drop(columns=['Unnamed: 0', 'embedding', 'similarity'])
         st.write("Search Results:")
         st.dataframe(results)  # This will display the DataFrame in the app
+        summary_string = results['Summary'].str.cat(sep=' ')
+        st.write(gpt("Summarize these AI projects.", summary_string))
 
 embeddings = df['embedding'].tolist()
 if isinstance(embeddings[0], str):
