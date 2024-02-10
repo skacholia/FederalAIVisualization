@@ -74,7 +74,8 @@ search_query = st.text_input('Enter your search query:', '')
 if st.button('Search'):
     if search_query:
         # Perform the search
-        results = search(df, search_query, n=10, pprint=False).drop(columns=['Unnamed: 0', 'embedding', 'similarity'])
+        results = search(df, search_query, n=10, pprint=False)
+        results = results[['Title', 'Summary',  'keywords', 'cluster', 'Use_Case_ID', 'Department','Department_Code', 'Agency', 'Office', 'Development_Stage', 'Techniques']]
         st.write("Search Results:")
         st.dataframe(results)  # This will display the DataFrame in the app
         summary_string = results['Summary'].str.cat(sep=' ')
