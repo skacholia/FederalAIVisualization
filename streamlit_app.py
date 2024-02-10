@@ -42,12 +42,12 @@ if selected_department == 'Overall':
 else:
     df = df[df['Department'] == selected_department]
 
-content = """Executive Order 13960, 
-“Promoting the Use of Trustworthy Artificial Intelligence 
-in the Federal Government,” 
-requires agencies to prepare an inventory of non-classified and non-sensitive current and 
-planned Artificial Intelligence (AI) use cases."""
-st.text(content)
+content = """Executive Order 13960, “Promoting the Use of Trustworthy Artificial Intelligence in the Federal Government,” 
+requires US federal agencies to prepare an inventory of non-classified and non-sensitive current and  planned Artificial Intelligence (AI) use cases. This tool is intended to help navigate, understand, and visualize those use cases.\n\n
+I used data cleaned by Travis Hoppe to create this website. It has two primary features:
+1. Search: I used OpenAI's text-embedding-3-small model to embed the descriptions of use cases. . 
+2. Visualization: """
+st.markdown(content)
 search_query = st.text_input('Enter your search query:', '')
 if st.button('Search'):
     if search_query:
