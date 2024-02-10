@@ -42,6 +42,12 @@ if selected_department == 'Overall':
 else:
     df = df[df['Department'] == selected_department]
 
+content = """Executive Order 13960, 
+“Promoting the Use of Trustworthy Artificial Intelligence 
+in the Federal Government,” 
+requires agencies to prepare an inventory of non-classified and non-sensitive current and 
+planned Artificial Intelligence (AI) use cases."""
+st.text(content)
 search_query = st.text_input('Enter your search query:', '')
 if st.button('Search'):
     if search_query:
