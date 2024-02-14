@@ -81,7 +81,7 @@ else:
         titles_str = last_title
     st.markdown(f"The {selected_department} reported {len(df)} AI projects in 2023. A random sample of project titles include {titles_str}")
 
-st.sidebar.markdown("This is project by [Suhan Kacholia](https://skacholia.vercel.app/)")
+st.sidebar.markdown("This is a project by [Suhan Kacholia](https://skacholia.vercel.app/)")
 st.header("Search")
 search_query = st.text_input('Enter your search query:', '')
 if st.button('Search'):
